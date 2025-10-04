@@ -1,0 +1,71 @@
+---
+
+#### `.gitignore`
+```gitignore
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+*.egg-info/
+dist/
+build/
+
+# Jupyter
+.ipynb_checkpoints
+
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+
+# Environment & Secrets
+.env
+.env.local
+.env.*.local
+credentials.json
+service-account-key.json
+token.pickle
+
+# Data files (except examples)
+data/*.csv
+data/*.json
+!data/sample_data.csv
+!data/.gitkeep
+
+# Models (large files)
+# Optional: If models are small (<100MB), you can commit them
+# Otherwise use Git LFS or exclude them
+# models/*.pkl
+# models/*.joblib
+!models/model_info.json
+!models/.gitkeep
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+.DS_Store
+
+# Logs
+logs/
+*.log
+
+# Testing
+.coverage
+htmlcov/
+.pytest_cache/
+
+# Temporary
+tmp/
+temp/
+*.tmp
+.DS_Store
+

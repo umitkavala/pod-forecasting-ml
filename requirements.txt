@@ -1,0 +1,27 @@
+# Pod Forecasting API - Requirements
+# Fully compatible with Python 3.10-3.13
+
+# Core ML & Data Science
+numpy>=1.24.0,<2.0.0
+pandas>=2.0.0,<3.0.0
+scikit-learn>=1.3.0,<2.0.0
+
+# API Framework
+fastapi>=0.109.0
+uvicorn[standard]>=0.27.0
+pydantic>=2.6.0  # Python 3.13 compatible
+
+# Google Sheets Integration
+gspread>=6.0.0
+google-auth>=2.27.0
+google-auth-oauthlib>=1.2.0
+google-auth-httplib2>=0.2.0
+google-api-python-client>=2.116.0
+
+# Monitoring
+prometheus-client>=0.20.0
+
+# Utilities
+python-dateutil>=2.8.2
+python-dotenv>=1.0.0
+requests>=2.31.0

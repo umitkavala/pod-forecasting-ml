@@ -1,0 +1,110 @@
+services:
+  # Pod Forecasting API
+  api:
+    build:
+      context: .
+      dockerfile: api/Dockerfile
+    container_name: pod-forecasting-api
+    ports:
+      - "5000:5000"
+    environment:
+      - PORT=5000
+      - API_KEY_NODE_SERVICE=${API_KEY_NODE_SERVICE}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      - ./logs:/app/logs
+      - ./models:/app/models
+      - ./data:/app/data
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:5000/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - pod-forecasting-network
+
+  # Data Pipeline (runs on schedule)
+  pipeline:
+    build:
+      context: .
+      dockerfile: scripts/Dockerfile.pipeline
+    container_name: pod-forecasting-pipeline
+    environment:
+      - SPREADSHEET_ID=${SPREADSHEET_ID}
+      - SERVICE_ACCOUNT_FILE=${SERVICE_ACCOUNT_FILE}
+      - PYTHONUNBUFFERED=1
+    volumes:
+      # Share data with API
+      - ./data:/app/data
+      
+      # Share models with API
+      - ./models:/app/models
+      
+      # Logs
+      - ./logs:/app/logs
+      
+      # Scripts (for development)
+      - ./scripts:/app/scripts
+    restart: unless-stopped
+    networks:
+      - pod-forecasting-network
+    # Run full pipeline every 6 hours
+    command: >
+      sh -c "
+        while true; do
+          echo '[Pipeline] Starting data pipeline...'
+          python scripts/fetch_from_sheets.py &&
+          python scripts/clean_data.py &&
+          python scripts/train_model.py &&
+          echo '[Pipeline] Pipeline completed successfully' ||
+          echo '[Pipeline] Pipeline failed'
+          echo '[Pipeline] Sleeping for 6 hours...'
+          sleep 21600
+        done
+      "
+
+  # Prometheus (Metrics)
+  prometheus:
+    image: prom/prometheus:latest
+    container_name: pod-forecasting-prometheus
+    ports:
+      - "9090:9090"
+    volumes:
+      - ./monitoring/prometheus.yml:/etc/prometheus/prometheus.yml
+      - prometheus-data:/prometheus
+    command:
+      - '--config.file=/etc/prometheus/prometheus.yml'
+      - '--storage.tsdb.path=/prometheus'
+    restart: unless-stopped
+    networks:
+      - pod-forecasting-network
+
+  # Grafana (Dashboards)
+  grafana:
+    image: grafana/grafana:latest
+    container_name: pod-forecasting-grafana
+    ports:
+      - "3000:3000"
+    environment:
+      - GF_SECURITY_ADMIN_USER=admin
+      - GF_SECURITY_ADMIN_PASSWORD=admin
+      - GF_USERS_ALLOW_SIGN_UP=false
+    volumes:
+      - grafana-data:/var/lib/grafana
+      - ./monitoring/grafana/dashboards:/etc/grafana/provisioning/dashboards
+      - ./monitoring/grafana/datasources:/etc/grafana/provisioning/datasources
+    restart: unless-stopped
+    depends_on:
+      - prometheus
+    networks:
+      - pod-forecasting-network
+
+volumes:
+  prometheus-data:
+  grafana-data:
+
+networks:
+  pod-forecasting-network:
+    driver: bridge

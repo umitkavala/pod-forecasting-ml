@@ -1,0 +1,22 @@
+{
+  "name": "pod-forecasting-demo",
+  "version": "1.0.0",
+  "description": "Integration examples for Pod Forecasting API",
+  "main": "nodejs_integration.js",
+  "scripts": {
+    "start": "node nodejs_integration.js",
+    "test": "node nodejs_integration.js"
+  },
+  "keywords": [
+    "pod-forecasting",
+    "kubernetes",
+    "ml",
+    "api"
+  ],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "axios": "^1.6.0",
+    "dotenv": "^17.2.3"
+  }
+}
