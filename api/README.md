@@ -699,62 +699,8 @@ CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "5000"]
 
 **Build & Run:**
 ```bash
-docker build -t pod-forecasting-api .
-docker run -p 5000:5000 -v $(pwd)/../models:/app/models pod-forecasting-api
-```
-
-### Kubernetes
-
-```yaml
-apiVersion: apps/v1
-kind: Deployment
-metadata:
-  name: pod-forecasting-api
-spec:
-  replicas: 3
-  selector:
-    matchLabels:
-      app: pod-forecasting-api
-  template:
-    metadata:
-      labels:
-        app: pod-forecasting-api
-    spec:
-      containers:
-      - name: api
-        image: your-registry/pod-forecasting-api:latest
-        ports:
-        - containerPort: 5000
-        env:
-        - name: MODEL_PATH
-          value: /models/model.pkl
-        volumeMounts:
-        - name: models
-          mountPath: /models
-        livenessProbe:
-          httpGet:
-            path: /health
-            port: 5000
-        readinessProbe:
-          httpGet:
-            path: /health
-            port: 5000
-      volumes:
-      - name: models
-        persistentVolumeClaim:
-          claimName: model-storage
----
-apiVersion: v1
-kind: Service
-metadata:
-  name: pod-forecasting-api
-spec:
-  selector:
-    app: pod-forecasting-api
-  ports:
-  - port: 80
-    targetPort: 5000
-  type: LoadBalancer
+docker-compose build 
+docker-compose up -d
 ```
 
 ---
@@ -780,40 +726,6 @@ increase(pod_api_predictions_total[1h])
 
 # Pod distribution
 sum by (pod_type) (pod_api_predicted_pods_count)
-```
-
-### Alerts
-
-```yaml
-groups:
-  - name: pod_forecasting_api
-    rules:
-      # High error rate
-      - alert: HighErrorRate
-        expr: rate(pod_api_errors_total[5m]) > 0.1
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "High error rate in Pod Forecasting API"
-      
-      # Model not loaded
-      - alert: ModelNotLoaded
-        expr: pod_api_model_loaded == 0
-        for: 1m
-        labels:
-          severity: critical
-        annotations:
-          summary: "Pod Forecasting model not loaded"
-      
-      # High latency
-      - alert: HighLatency
-        expr: histogram_quantile(0.95, rate(pod_api_request_duration_seconds_bucket[5m])) > 1
-        for: 5m
-        labels:
-          severity: warning
-        annotations:
-          summary: "High latency in Pod Forecasting API"
 ```
 
 ---
