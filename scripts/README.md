@@ -12,10 +12,9 @@ Google Sheets -> Fetch -> Clean -> Train -> Deploy
 ```
 
 **Scripts:**
-1. `fetch_from_sheets.py` - OAuth-based data ingestion
-2. `fetch_from_sheets_SERVICE_ACCOUNT.py` - Service account for cronjobs
-3. `clean_data.py` - Data cleaning and validation
-4. `train_model.py` - Model training and evaluation
+1. `fetch_from_sheets.py` - Service account for cronjobs
+2. `clean_data.py` - Data cleaning and validation
+3. `train_model.py` - Model training and evaluation
 
 ---
 
