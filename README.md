@@ -40,7 +40,7 @@ pod-forecasting/
 ├── scripts/                # Data pipeline -> See scripts/README.md
 ├── data/                   # Data files -> See data/README.md
 ├── models/                 # Trained models
-└── docs/outputs/           # Setup guides
+└── demo/                   # Demo apps (python & node)
 ```
 
 ---
@@ -82,7 +82,6 @@ console.log(response.data.predictions);
 - FastAPI with Prometheus metrics
 - Google Sheets integration
 - Multi-format date support (DD/MM/YYYY, YYYY-MM-DD, MM/DD/YYYY)
-- Kubernetes-ready (health checks, probes)
 - Automated cronjobs with service account
 
 ---
@@ -91,14 +90,9 @@ console.log(response.data.predictions);
 
 ```bash
 # Docker
-docker build -t pod-forecasting .
-docker run -p 5000:5000 -v $(pwd)/models:/app/models pod-forecasting
-
-# Kubernetes  
-kubectl apply -f k8s/
-
-# Cronjob (daily at 2 AM)
-0 2 * * * cd /path/to/scripts && ./run_pipeline.sh >> /var/log/pod-forecasting.log 2>&1
+docker-compose build
+docker-compose up -d 
+  
 ```
 
 Deployment details: [api/README.md#deployment](api/README.md)
