@@ -21,41 +21,7 @@ Google Sheets -> Fetch -> Clean -> Train -> Deploy
 
 ## Scripts
 
-### 1. fetch_from_sheets.py (OAuth)
-
-**Purpose:** Fetch data from Google Sheets using OAuth user consent
-
-**When to use:**
-- Manual runs
-- Development
-- First-time setup
-
-**Authentication:**
-- Requires `credentials.json`
-- Opens browser for consent
-- Saves token to `token.pickle`
-
-**Usage:**
-```bash
-python fetch_from_sheets.py
-```
-
-**Output:**
-- `../data/historical_raw.csv`
-- `../data/budget_raw.csv`
-- `logs/data_ingestion.log`
-
-**Setup:**
-1. Download `credentials.json` from Google Cloud Console
-2. Place in `scripts/` directory
-3. Run script (browser will open)
-4. Click "Allow"
-
-**Not suitable for cronjobs!**
-
----
-
-### 2. fetch_from_sheets_SERVICE_ACCOUNT.py (Service Account)
+### 1. fetch_from_sheets.py (Service Account)
 
 **Purpose:** Fetch data using service account (no user interaction)
 
