@@ -292,7 +292,7 @@ Next: cd ../api && uvicorn main:app --port 5000
 cd scripts
 
 # Step 1: Fetch data
-python fetch_from_sheets_SERVICE_ACCOUNT.py
+python fetch_from_sheets.py
 
 # Step 2: Clean data
 python clean_data.py
@@ -314,7 +314,7 @@ echo "=== Starting Pipeline: $(date) ==="
 
 # 1. Fetch
 echo "1. Fetching data..."
-python fetch_from_sheets_SERVICE_ACCOUNT.py || exit 1
+python fetch_from_sheets.py || exit 1
 
 # 2. Clean
 echo "2. Cleaning data..."
@@ -353,7 +353,7 @@ EOF
 
 ### Script Configuration
 
-**fetch_from_sheets_SERVICE_ACCOUNT.py:**
+**fetch_from_sheets.py:**
 ```python
 SPREADSHEET_ID = os.getenv('SPREADSHEET_ID', 'YOUR_SPREADSHEET_ID')
 SERVICE_ACCOUNT_FILE = os.getenv('SERVICE_ACCOUNT_FILE', 'service-account-key.json')
@@ -430,7 +430,7 @@ crontab -e
 
 ```bash
 # Fetch new data hourly
-0 * * * * cd /path/to/pod-forecasting/scripts && python fetch_from_sheets_SERVICE_ACCOUNT.py >> /var/log/pod-fetch.log 2>&1
+0 * * * * cd /path/to/pod-forecasting/scripts && python fetch_from_sheets.py >> /var/log/pod-fetch.log 2>&1
 
 # Clean and retrain every 6 hours
 0 */6 * * * cd /path/to/pod-forecasting/scripts && python clean_data.py && python train_model.py >> /var/log/pod-train.log 2>&1
@@ -464,7 +464,7 @@ fi
 
 **Example:**
 ```bash
-python fetch_from_sheets_SERVICE_ACCOUNT.py
+python fetch_from_sheets.py
 echo $?  # 0 = success, 1 = failure
 ```
 
@@ -683,7 +683,7 @@ echo "Pipeline health: OK"
 python fetch_from_sheets.py
 
 # Service account fetch (cronjob)
-python fetch_from_sheets_SERVICE_ACCOUNT.py
+python fetch_from_sheets.py
 
 # Clean data
 python clean_data.py
@@ -708,7 +708,7 @@ ls -lh ../models/*.pkl ../data/*.csv
 | File | Purpose | Output |
 |------|---------|--------|
 | `fetch_from_sheets.py` | OAuth data fetch | raw CSVs |
-| `fetch_from_sheets_SERVICE_ACCOUNT.py` | Service account fetch | raw CSVs |
+| `fetch_from_sheets.py` | Service account fetch | raw CSVs |
 | `clean_data.py` | Data cleaning | clean CSVs |
 | `train_model.py` | Model training | model files |
 | `run_pipeline.sh` | Full pipeline | all outputs |
