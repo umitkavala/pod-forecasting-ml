@@ -38,7 +38,7 @@ Google Sheets -> Fetch -> Clean -> Train -> Deploy
 ```bash
 export SPREADSHEET_ID="your_spreadsheet_id"
 export SERVICE_ACCOUNT_FILE="../service-account-key.json"
-python fetch_from_sheets_SERVICE_ACCOUNT.py
+python fetch_from_sheets.py
 ```
 
 **Output:**
